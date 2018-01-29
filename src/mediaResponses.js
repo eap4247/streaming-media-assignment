@@ -2,10 +2,10 @@
 const fs = require('fs'); // filesystem
 const path = require('path'); // paths and file objects
 
-// deliver party.mp4
-const getParty = (request, response) => {
+// put our file streaming into a single method
+const loadFile = (request, response, filepath, contentType) => {
   // create file object to our media file
-  const file = path.resolve(__dirname, '../client/party.mp4');
+  const file = path.resolve(__dirname, filepath);
 
   // provide statistics of file (callback)
   fs.stat(file, (err, stats) => {
@@ -52,7 +52,7 @@ const getParty = (request, response) => {
       'Content-Range': `bytes ${start}-${end}/${total}`,
       'Accept-Ranges': 'bytes',
       'Content-Length': chunksize,
-      'Content-Type': 'video/mp4',
+      'Content-Type': contentType,
     });
 
     // create a filestream
@@ -70,5 +70,26 @@ const getParty = (request, response) => {
   });
 };
 
+// deliver party.mp4
+// we like to party
+const getParty = (request, response) => {
+  loadFile(request, response, '../client/party.mp4', 'video/mp4');
+};
+
+// deliver bling.mp3
+// i like to cha-cha
+const getBling = (request, response) => {
+  loadFile(request, response, '../client/bling.mp3', 'audio/mpeg');
+};
+
+// deliver bird.mp4
+// berdthday boy 
+const getBird = (request, response) => {
+  loadFile(request, response, '../client/bird.mp4', 'video/mp4');
+};
+
+
 // create public objects
 module.exports.getParty = getParty;
+module.exports.getBling = getBling;
+module.exports.getBird = getBird;
